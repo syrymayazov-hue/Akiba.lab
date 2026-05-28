@@ -3,164 +3,776 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Akiba Lab — 3D печать аниме</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Akiba Lab — 3D печать аниме ♡</title>
+<meta name="description" content="Akiba Lab — студия 3D печати аниме фигурок в Алматы. Печатаем любимых персонажей с точностью до 0.05 мм.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════
+   ✿ AKIBA LAB — KAWAII THEME (PREMIUM GLOW & SCALED)
+   ═══════════════════════════════════════════ */
 :root {
-  --bg: #0c0c10;
-  --surface: #14141a;
-  --border: #2a2a36;
-  --pink: #f03e6e;
-  --pink-dim: rgba(240,62,110,0.12);
-  --cyan: #38d9f5;
-  --text: #ece8f4;
-  --muted: #7a748e;
-  --light: #b8b2cc;
+  --bg: #09060e;
+  --bg2: #0f0b16;
+  --surface: rgba(26, 21, 37, 0.7);
+  --surface-hover: rgba(34, 28, 48, 0.85);
+  --border: rgba(200, 170, 255, 0.12);
+  --border-soft: rgba(200, 170, 255, 0.08);
+
+  /* Kawaii Palette */
+  --sakura: #f2a0c0;
+  --sakura-bright: #ff6fa0;
+  --sakura-dim: rgba(242, 160, 192, 0.12);
+  --sakura-glow: rgba(242, 160, 192, 0.25);
+  --lavender: #c4a0f2;
+  --lavender-dim: rgba(196, 160, 242, 0.1);
+  --mint: #8ee8c8;
+  --sky: #a0d4f2;
+  --peach: #f2c8a0;
+  --star: #f2e08c;
+
+  --text: #f3effa;
+  --muted: #9588ad;
+  --light: #d1c9e3;
+
   --wa: #25D366;
   --tg: #2AABEE;
   --ig: #E1306C;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-pill: 100px;
 }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; overflow-x: hidden; }
 
-/* NAV */
-nav { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; height: 60px; background: rgba(12,12,16,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-.logo { font-family: 'Noto Serif JP', serif; font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; letter-spacing: 0.04em; }
-.logo em { font-style: normal; color: var(--pink); }
-.nav-links { display: flex; gap: 1.8rem; list-style: none; }
-.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; transition: color 0.2s; }
-.nav-links a:hover { color: var(--text); }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px; /* Slightly enlarged from 15px */
+  line-height: 1.65;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ═══ GLOWING BACKDROP BLOBS & PATTERNS ═══ */
+.pattern-overlay {
+  position: fixed;
+  inset: 0;
+  background-image: url('kawaii_pattern.png');
+  background-size: 360px;
+  opacity: 0.035; /* Elegant subtle watermark */
+  pointer-events: none;
+  z-index: -2;
+}
+
+.glow-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.14;
+  pointer-events: none;
+  z-index: -1;
+  mix-blend-mode: screen;
+}
+.blob-1 {
+  top: 10%;
+  left: -5%;
+  width: 450px;
+  height: 450px;
+  background: var(--sakura);
+  animation: float-blob-1 25s infinite alternate ease-in-out;
+}
+.blob-2 {
+  top: 50%;
+  right: -10%;
+  width: 550px;
+  height: 550px;
+  background: var(--lavender);
+  animation: float-blob-2 30s infinite alternate ease-in-out;
+}
+.blob-3 {
+  bottom: 10%;
+  left: 15%;
+  width: 400px;
+  height: 400px;
+  background: var(--mint);
+  animation: float-blob-3 20s infinite alternate ease-in-out;
+}
+
+@keyframes float-blob-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(100px, 60px) scale(1.15); }
+}
+@keyframes float-blob-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-120px, -70px) scale(1.2); }
+}
+@keyframes float-blob-3 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, -90px) scale(0.95); }
+}
+
+/* ═══ GLOBAL ANIMATIONS ═══ */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes petal-fall {
+  0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 0.8; }
+  100% { transform: translateY(105vh) translateX(80px) rotate(360deg); opacity: 0; }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 12px rgba(242,160,192,0.2); }
+  50% { box-shadow: 0 0 24px rgba(242,160,192,0.4); }
+}
+
+/* ═══ SAKURA PETALS OVERLAY ═══ */
+.sakura-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(ellipse, rgba(242,160,192,0.6), rgba(242,160,192,0));
+  border-radius: 50% 0 50% 0;
+  animation: petal-fall linear infinite;
+  opacity: 0;
+}
+
+/* ═══ NAV ═══ */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2.5rem;
+  height: 72px; /* Increased from 64px */
+  background: rgba(9, 6, 14, 0.80);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.35rem; /* Increased from 1.25rem */
+  font-weight: 800;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo em { font-style: normal; color: var(--sakura); }
+.logo-heart { font-size: 1rem; animation: sparkle 2s ease-in-out infinite; }
+.nav-links { display: flex; gap: 0.6rem; list-style: none; }
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.88rem; /* Increased from 0.8rem */
+  font-weight: 500;
+  padding: 0.5rem 1.1rem; /* Increased from 0.4rem 0.9rem */
+  border-radius: var(--radius-pill);
+  transition: all 0.25s;
+  letter-spacing: 0.02em;
+}
+.nav-links a:hover {
+  color: var(--sakura);
+  background: var(--sakura-dim);
+}
 @media(max-width:600px){ .nav-links { display: none; } }
 
-/* HERO
-   ─────────────────────────────────────────────────────────────
-   Чтобы поставить фон — замени "" в --hero-bg на URL картинки.
-   Например: --hero-bg: url("photo.jpg");
-   Картинку можно закинуть рядом с index.html в репозиторий.
-   ───────────────────────────────────────────────────────────── */
+/* ═══ HERO ═══ */
 .hero-wrap {
-  --hero-bg: "marinka.jpg";           /* ← сюда вставь URL фото */
   position: relative;
-  background-image: var(--hero-bg);
-  background-size: cover;
-  background-position: center top;
+  overflow: hidden;
+  background: linear-gradient(135deg, #170d20 0%, #09060e 50%, #0d0d18 100%);
+}
+.hero-wrap::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242,160,192,0.09) 0%, transparent 70%);
+  pointer-events: none;
 }
 .hero-wrap::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(12,12,16,0.6) 0%, rgba(12,12,16,0.85) 60%, var(--bg) 100%);
+  bottom: -40%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,160,242,0.07) 0%, transparent 70%);
   pointer-events: none;
 }
-.hero { padding: 7rem 2rem 5rem; max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
 
-.tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.5rem; }
-.tag::before { content: ''; display: block; width: 20px; height: 1px; background: var(--pink); }
-h1 { font-family: 'Noto Serif JP', serif; font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
-h1 span { color: var(--pink); }
-.hero-desc { max-width: 520px; color: var(--light); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.75; }
-.hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.hero {
+  padding: 8rem 2.5rem 6.5rem; /* Scaled up */
+  max-width: 1000px; /* Scaled up from 900px */
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp 0.8s ease-out;
+}
 
-/* BUTTONS */
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 0.7rem 1.5rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; text-decoration: none; border-radius: 6px; transition: all 0.18s; cursor: pointer; border: none; white-space: nowrap; }
-.btn-fill { background: var(--pink); color: #fff; }
-.btn-fill:hover { background: #d93360; transform: translateY(-1px); }
-.btn-ghost { background: transparent; color: var(--light); border: 1px solid var(--border); }
-.btn-ghost:hover { border-color: var(--light); color: var(--text); }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem; /* Scaled up */
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sakura);
+  margin-bottom: 1.8rem; /* Scaled up */
+  background: var(--sakura-dim);
+  padding: 0.4rem 1.1rem; /* Scaled up */
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(242,160,192,0.15);
+}
+.tag::before { content: '✿'; font-size: 0.9rem; }
+
+h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(3rem, 7vw, 5.5rem); /* Scaled up from clamp(2.6rem, 6vw, 5rem) */
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.8rem;
+}
+h1 span {
+  background: linear-gradient(135deg, var(--sakura), var(--lavender));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-desc {
+  max-width: 580px; /* Scaled up from 520px */
+  color: var(--light);
+  font-size: 1.1rem; /* Scaled up from 1rem */
+  margin-bottom: 3rem; /* Scaled up from 2.5rem */
+  line-height: 1.75;
+}
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+/* ═══ BUTTONS ═══ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px; /* Scaled up */
+  padding: 0.8rem 1.8rem; /* Scaled up from 0.65rem 1.4rem */
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem; /* Scaled up from 0.82rem */
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-pill);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.btn-fill {
+  background: linear-gradient(135deg, var(--sakura-bright), var(--sakura));
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(242,160,192,0.25);
+}
+.btn-fill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(242,160,192,0.35);
+}
+.btn-ghost {
+  background: rgba(255,255,255,0.03);
+  color: var(--light);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+.btn-ghost:hover {
+  border-color: var(--sakura);
+  color: var(--sakura);
+  background: var(--sakura-dim);
+}
 .btn-wa { background: var(--wa); color: #fff; }
-.btn-wa:hover { background: #1fb855; transform: translateY(-1px); }
+.btn-wa:hover { background: #1fb855; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,211,102,0.3); }
 .btn-tg { background: var(--tg); color: #fff; }
-.btn-tg:hover { background: #1a96d4; transform: translateY(-1px); }
-.btn-ig { background: var(--ig); color: #fff; }
-.btn-ig:hover { background: #c1255a; transform: translateY(-1px); }
+.btn-tg:hover { background: #1a96d4; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,171,238,0.3); }
+.btn-ig { background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af); color: #fff; }
+.btn-ig:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(225,48,108,0.3); }
 
-/* social icons SVG inline */
-.icon-wa, .icon-tg, .icon-ig { width: 18px; height: 18px; flex-shrink: 0; }
+.icon-wa, .icon-tg, .icon-ig { width: 20px; height: 20px; flex-shrink: 0; }
 
-/* SOCIAL FLOAT — плавающие кнопки справа */
-.social-float { position: fixed; right: 1.2rem; bottom: 1.5rem; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
-.social-float a { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
-.social-float a:hover { transform: scale(1.12); }
+/* ═══ SOCIAL FLOAT ═══ */
+.social-float {
+  position: fixed;
+  right: 1.5rem; /* Scaled up */
+  bottom: 2rem; /* Scaled up */
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Scaled up */
+}
+.social-float a {
+  width: 54px; /* Scaled up from 48px */
+  height: 54px; /* Scaled up from 48px */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+.social-float a:hover { transform: scale(1.15) translateY(-2px); }
 .social-float .f-wa { background: var(--wa); }
 .social-float .f-tg { background: var(--tg); }
-.social-float .f-ig { background: var(--ig); }
-.social-float svg { width: 22px; height: 22px; }
+.social-float .f-ig { background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af); }
+.social-float svg { width: 24px; height: 24px; }
 
-/* STATS */
-.stats { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
-.stat { padding: 2rem 3rem; text-align: center; border-right: 1px solid var(--border); }
-.stat:last-child { border-right: none; }
-.stat-n { font-family: 'Noto Serif JP', serif; font-size: 2rem; font-weight: 900; color: var(--text); display: block; line-height: 1; }
-.stat-l { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 0.35rem; display: block; }
+/* ═══ STATS ═══ */
+.stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 1rem 2.5rem;
+}
+.stat {
+  padding: 2.5rem 3rem; /* Scaled up */
+  text-align: center;
+  position: relative;
+  flex: 1;
+  min-width: 160px;
+}
+.stat::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: var(--border);
+}
+.stat:last-child::after { display: none; }
+.stat-n {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem; /* Scaled up from 1.8rem */
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--sakura), var(--lavender));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  line-height: 1;
+}
+.stat-l {
+  font-size: 0.8rem; /* Scaled up from 0.72rem */
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-top: 0.5rem;
+  display: block;
+}
 
-/* SECTION */
-.section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
-.section-head { margin-bottom: 3rem; }
-.section-head .tag { margin-bottom: 0.8rem; }
-h2 { font-family: 'Noto Serif JP', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 900; line-height: 1.15; }
-h2 em { font-style: normal; color: var(--pink); }
+/* ═══ SECTION ═══ */
+.section { 
+  padding: 7rem 2.5rem; /* Scaled up from 5rem 2rem */
+  max-width: 1200px; /* Scaled up from 1100px */
+  margin: 0 auto; 
+}
+.section-head { margin-bottom: 4rem; } /* Scaled up */
+.section-head .tag { margin-bottom: 1.2rem; }
+h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3rem); /* Scaled up from clamp(1.7rem, 3.5vw, 2.6rem) */
+  font-weight: 800;
+  line-height: 1.15;
+}
+h2 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--sakura), var(--lavender));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-/* CATALOG */
-.catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1px; background: var(--border); }
-.catalog-card { background: var(--surface); overflow: hidden; transition: background 0.2s; }
-.catalog-card:hover { background: #1a1a24; }
+.divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  max-width: 1200px; /* Scaled up from 1100px */
+  margin: 0 auto;
+}
+
+/* ═══ CATALOG ═══ */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); /* Scaled up from 260px */
+  gap: 1.5rem; /* Scaled up from 1.2rem */
+}
+.catalog-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.catalog-card:hover {
+  background: var(--surface-hover);
+  transform: translateY(-5px);
+  border-color: rgba(242,160,192,0.3);
+  box-shadow: 0 16px 48px rgba(242,160,192,0.12);
+}
 
 .catalog-img {
   aspect-ratio: 4/3;
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  display: flex; align-items: center; justify-content: center;
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-/* Если есть фото — оно перекрывает всё */
-.catalog-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* Заглушка — иероглиф */
-.catalog-img .glyph { font-family: 'Noto Serif JP', serif; font-size: 4.5rem; font-weight: 900; color: rgba(240,62,110,0.1); position: relative; user-select: none; }
-.catalog-img .char-svg { position: absolute; opacity: 0.7; pointer-events: none; }
+.catalog-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.catalog-card:hover .catalog-img img { transform: scale(1.06); }
 
-.catalog-badge { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.55); border: 1px solid rgba(240,62,110,0.4); color: var(--pink); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; z-index: 2; }
-.catalog-body { padding: 1rem 1.1rem 1.2rem; }
-.catalog-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; color: var(--text); }
-.catalog-meta { font-size: 0.75rem; color: var(--muted); }
-.catalog-price { font-size: 0.82rem; font-weight: 600; color: var(--pink); margin-top: 0.6rem; }
-.catalog-order { margin-top: 0.8rem; }
+.catalog-img .glyph {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 4.5rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, rgba(242,160,192,0.18), rgba(196,160,242,0.12));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  user-select: none;
+}
 
-/* SERVICES */
-.services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1px; background: var(--border); }
-.svc-card { background: var(--surface); padding: 2rem 1.5rem; }
-.svc-icon { font-size: 1.6rem; margin-bottom: 1rem; display: block; }
-.svc-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
-.svc-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
+.catalog-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(9,6,14,0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(242,160,192,0.3);
+  color: var(--sakura);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  z-index: 2;
+}
 
-/* PROCESS */
-.steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2rem; }
-.step { display: flex; flex-direction: column; gap: 0.6rem; }
-.step-num { font-family: 'Noto Serif JP', serif; font-size: 2.2rem; font-weight: 900; color: var(--pink); line-height: 1; opacity: 0.35; }
-.step-title { font-weight: 600; font-size: 0.9rem; }
-.step-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.65; }
+.catalog-body { padding: 1.3rem 1.4rem 1.5rem; } /* Scaled up from 1.1 1.2 1.3 */
+.catalog-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; color: var(--text); }
+.catalog-meta { font-size: 0.8rem; color: var(--muted); }
+.catalog-price {
+  font-size: 0.95rem; /* Scaled up from 0.85rem */
+  font-weight: 700;
+  color: var(--sakura);
+  margin-top: 0.7rem;
+}
+.catalog-order { margin-top: 1rem; }
 
-/* CONTACT */
-.contact-socials { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 2rem; }
-.info-rows { display: flex; flex-direction: column; gap: 0.7rem; }
-.info-row { display: flex; gap: 0.8rem; font-size: 0.82rem; color: var(--muted); align-items: flex-start; }
-.info-row span:first-child { width: 20px; flex-shrink: 0; opacity: 0.7; }
+/* ═══ SERVICES ═══ */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Scaled up from 240px */
+  gap: 1.5rem; /* Scaled up */
+}
+.svc-card {
+  background: var(--surface);
+  padding: 2.5rem 1.8rem; /* Scaled up from 2rem 1.5rem */
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.svc-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--sakura), var(--lavender));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.svc-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(242,160,192,0.25);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.svc-card:hover::before { opacity: 1; }
 
-/* FOOTER */
-footer { border-top: 1px solid var(--border); padding: 2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.78rem; color: var(--muted); }
-.footer-logo { font-family: 'Noto Serif JP', serif; font-weight: 900; font-size: 1rem; color: var(--text); text-decoration: none; }
-.footer-logo em { font-style: normal; color: var(--pink); }
+.svc-icon {
+  font-size: 2.4rem; /* Scaled up from 2rem */
+  margin-bottom: 1.2rem;
+  display: block;
+  filter: drop-shadow(0 2px 10px rgba(242,160,192,0.25));
+}
+.svc-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.6rem; }
+.svc-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+/* ═══ PROCESS ═══ */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Scaled up from 180px */
+  gap: 2.5rem; /* Scaled up */
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  position: relative;
+  padding-left: 0;
+}
+.step-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem; /* Scaled up from 2.4rem */
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--sakura), var(--lavender));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  opacity: 0.4;
+}
+.step-title { font-weight: 700; font-size: 1rem; }
+.step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
+
+/* ═══ CONTACT ═══ */
+.contact-socials { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2.5rem; }
+.info-rows { display: flex; flex-direction: column; gap: 1rem; }
+.info-row {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem; /* Scaled up from 0.85rem */
+  color: var(--muted);
+  align-items: center;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  padding: 1rem 1.5rem; /* Scaled up from 0.8rem 1.2rem */
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  max-width: 400px; /* Scaled up from 360px */
+}
+.info-row span:first-child { flex-shrink: 0; }
+
+/* ═══ FOOTER ═══ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2.5rem; /* Scaled up */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.85rem; /* Scaled up from 0.78rem */
+  color: var(--muted);
+}
+.footer-logo {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem; /* Scaled up from 1rem */
+  color: var(--text);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-logo em { font-style: normal; color: var(--sakura); }
 .footer-social { display: flex; gap: 0.8rem; }
-.footer-social a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
-.footer-social a:hover { color: var(--text); }
+.footer-social a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-pill);
+  transition: all 0.2s;
+}
+.footer-social a:hover { color: var(--sakura); background: var(--sakura-dim); }
 
-hr.divider { border: none; border-top: 1px solid var(--border); }
+/* ═══ PHOTO MANAGER OVERLAY ═══ */
+.photo-manager-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
+}
+.photo-manager-overlay.active { display: flex; }
+.photo-manager {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+}
+.pm-close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.pm-close:hover { border-color: var(--sakura); color: var(--sakura); }
+.pm-title {
+  font-weight: 700;
+  font-size: 1.25rem; /* Scaled up */
+  margin-bottom: 0.4rem;
+}
+.pm-desc {
+  font-size: 0.85rem; /* Scaled up */
+  color: var(--muted);
+  margin-bottom: 1.8rem;
+}
+.pm-item {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem; /* Scaled up */
+  padding: 1rem; /* Scaled up */
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.8rem;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+.pm-item:hover { border-color: rgba(242,160,192,0.3); }
+.pm-thumb {
+  width: 64px; /* Scaled up */
+  height: 64px; /* Scaled up */
+  border-radius: 10px;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.7rem; /* Scaled up */
+  color: rgba(242,160,192,0.3);
+  position: relative;
+}
+.pm-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.pm-info { flex: 1; min-width: 0; }
+.pm-name { font-weight: 600; font-size: 0.92rem; }
+.pm-status { font-size: 0.78rem; color: var(--muted); }
+.pm-btn {
+  font-family: 'Outfit', sans-serif;
+  padding: 0.5rem 1.1rem; /* Scaled up */
+  font-size: 0.8rem; /* Scaled up */
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--light);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.pm-btn:hover { border-color: var(--sakura); color: var(--sakura); }
+.pm-btn.has-photo { border-color: rgba(142,232,200,0.35); color: var(--mint); }
+.pm-btn.has-photo:hover { border-color: #ff5577; color: #ff5577; }
+
+/* Admin fab */
+.admin-fab {
+  position: fixed;
+  left: 1.5rem; /* Scaled up */
+  bottom: 2rem; /* Scaled up */
+  z-index: 200;
+  width: 54px; /* Scaled up */
+  height: 54px; /* Scaled up */
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  color: var(--muted);
+  font-size: 1.35rem; /* Scaled up */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+.admin-fab:hover {
+  border-color: var(--sakura);
+  color: var(--sakura);
+  transform: scale(1.1);
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 480px) {
+  .stats { flex-direction: column; align-items: center; }
+  .stat::after { display: none; }
+  .hero { padding: 5rem 1.5rem 4rem; }
+}
 </style>
 </head>
 <body>
 
-<!-- Плавающие кнопки соцсетей -->
+<!-- Background Ambient Glow & Patterns -->
+<div class="pattern-overlay"></div>
+<div class="glow-blob blob-1"></div>
+<div class="glow-blob blob-2"></div>
+<div class="glow-blob blob-3"></div>
+
+<!-- Sakura petals (generated by JS) -->
+<div class="sakura-container" id="sakura"></div>
+
+<!-- Floating social buttons -->
 <div class="social-float">
   <a class="f-wa" href="https://wa.me/77077890369" target="_blank" title="WhatsApp">
     <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
@@ -173,9 +785,25 @@ hr.divider { border: none; border-top: 1px solid var(--border); }
   </a>
 </div>
 
+<!-- Photo Manager FAB -->
+<button class="admin-fab" id="admin-fab" title="Управление фотографиями">📷</button>
+
+<!-- Photo Manager Overlay -->
+<div class="photo-manager-overlay" id="photo-manager">
+  <div class="photo-manager">
+    <button class="pm-close" id="pm-close">✕</button>
+    <div class="pm-title">✿ Управление фотографиями</div>
+    <p class="pm-desc">Нажмите кнопку рядом с карточкой, чтобы загрузить или сменить фото. Фото сохраняются в localStorage браузера.</p>
+    <div id="pm-list"></div>
+  </div>
+</div>
+
+<!-- Hidden file input -->
+<input type="file" id="photo-input" accept="image/*" style="display:none">
+
 <!-- NAV -->
 <nav>
-  <a href="#" class="logo">Akiba <em>Lab</em></a>
+  <a href="#" class="logo">Akiba <em>Lab</em> <span class="logo-heart">♡</span></a>
   <ul class="nav-links">
     <li><a href="#catalog">Каталог</a></li>
     <li><a href="#services">Услуги</a></li>
@@ -188,10 +816,10 @@ hr.divider { border: none; border-top: 1px solid var(--border); }
 <div class="hero-wrap">
   <div class="hero">
     <div class="tag">студия 3D печати · Алматы</div>
-    <h1>Аниме фигурки<br><span>на заказ</span></h1>
-    <p class="hero-desc">Печатаем любимых персонажей с точностью до 0.05 мм. От маленького брелока до коллекции.</p>
+    <h1>Аниме фигурки<br><span>на заказ ♡</span></h1>
+    <p class="hero-desc">Печатаем любимых персонажей с точностью до 0.05 мм. От маленького брелока до полноценной коллекции — с любовью к каждой детали ✿</p>
     <div class="hero-actions">
-      <a href="#catalog" class="btn btn-fill">Смотреть каталог</a>
+      <a href="#catalog" class="btn btn-fill">✿ Смотреть каталог</a>
       <a href="https://wa.me/77077890369" target="_blank" class="btn btn-wa">
         <svg class="icon-wa" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
         WhatsApp
@@ -216,7 +844,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); }
 <div class="section" id="catalog">
   <div class="section-head">
     <div class="tag">Каталог</div>
-    <h2>Наши <em>работы</em></h2>
+    <h2>Наши <em>работы</em> ✿</h2>
   </div>
   <div class="catalog-grid" id="catalog-grid"></div>
 </div>
@@ -260,7 +888,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); }
 <div class="section" id="contact">
   <div class="section-head">
     <div class="tag">Контакты</div>
-    <h2>Написать <em>нам</em></h2>
+    <h2>Написать <em>нам</em> ♡</h2>
   </div>
   <div class="contact-socials">
     <a href="https://wa.me/77077890369" target="_blank" class="btn btn-wa">
@@ -284,7 +912,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); }
 
 <!-- FOOTER -->
 <footer>
-  <a href="#" class="footer-logo">Akiba <em>Lab</em></a>
+  <a href="#" class="footer-logo">Akiba <em>Lab</em> ♡</a>
   <span>© 2024 · 3D печать аниме · Алматы</span>
   <div class="footer-social">
     <a href="https://wa.me/77077890369" target="_blank">WA</a>
@@ -294,35 +922,31 @@ hr.divider { border: none; border-top: 1px solid var(--border); }
 </footer>
 
 <script>
-/* =====================================================================
-   КАТАЛОГ — редактируй этот массив чтобы добавить/убрать работы
+/* ═══════════════════════════════════════════════════════════════
+   ✿ КАТАЛОГ — ЛЕГКО МЕНЯТЬ ФОТКИ!
    
-   Поля каждой карточки:
-     title   — название фигурки
-     anime   — название аниме (показывается в meta)
-     tech    — материал и технология печати
-     size    — размер
-     price   — цена (строка)
-     badge   — тег жанра (Shonen / Mecha / Moe / Custom и т.д.)
-     photo   — путь к фото или "" если фото нет
-               Пример: "photos/naruto.jpg"
-               Фото кладёшь в папку photos/ рядом с index.html
-     glyph   — иероглиф-заглушка если фото нет
-     color   — цвет фона карточки если нет фото (hex)
-   ===================================================================== */
+   Способ 1 (для разработчика): Укажи путь к фото в поле "photo"
+   Способ 2 (для всех): Нажми кнопку 📷 внизу слева — откроется
+   менеджер фотографий, можно загрузить фото прямо из браузера.
+   Фото сохраняются в localStorage и переживают перезагрузку.
+   
+   Чтобы добавить/убрать карточку — просто измени массив ниже.
+   ═══════════════════════════════════════════════════════════════ */
 const CATALOG = [
   {
+    id:     "naruto",          // уникальный ID (для системы фото)
     title:  "Наруто Узумаки",
     anime:  "Naruto",
     tech:   "Resin SLA",
     size:   "15 см",
     price:  "от 12 000 ₸",
     badge:  "Shonen",
-    photo:  "",          /* ← сюда: "photos/naruto.jpg" */
+    photo:  "",                // ← путь к файлу, напр. "photos/naruto.jpg"
     glyph:  "忍",
-    color:  "#131318"
+    color:  "#151020"
   },
   {
+    id:     "eva01",
     title:  "Evangelion Unit-01",
     anime:  "NGE",
     tech:   "Resin SLA",
@@ -331,9 +955,10 @@ const CATALOG = [
     badge:  "Mecha",
     photo:  "",
     glyph:  "機",
-    color:  "#0e1218"
+    color:  "#0e1420"
   },
   {
+    id:     "kirito",
     title:  "Кирито",
     anime:  "SAO",
     tech:   "FDM PLA+",
@@ -342,9 +967,10 @@ const CATALOG = [
     badge:  "Isekai",
     photo:  "",
     glyph:  "剣",
-    color:  "#12100e"
+    color:  "#14100e"
   },
   {
+    id:     "todoroki",
     title:  "Шото Тодороки",
     anime:  "My Hero Academia",
     tech:   "Resin SLA",
@@ -353,9 +979,10 @@ const CATALOG = [
     badge:  "Superhero",
     photo:  "",
     glyph:  "炎",
-    color:  "#100a14"
+    color:  "#120a18"
   },
   {
+    id:     "zerotwo",
     title:  "Зеро Ту",
     anime:  "Darling in the FranXX",
     tech:   "Resin SLA",
@@ -364,9 +991,10 @@ const CATALOG = [
     badge:  "Moe",
     photo:  "",
     glyph:  "02",
-    color:  "#090c0f"
+    color:  "#0c0e18"
   },
   {
+    id:     "custom",
     title:  "Ваш персонаж",
     anime:  "Любое аниме",
     tech:   "по запросу",
@@ -375,37 +1003,207 @@ const CATALOG = [
     badge:  "Custom",
     photo:  "",
     glyph:  "夢",
-    color:  "#0c100c"
+    color:  "#0e1210"
   }
 ];
 
-/* ── рендер каталога (не трогай) ── */
+/* ── Система управления фотографиями ── */
+const PhotoManager = {
+  STORAGE_KEY: 'akiba_photos',
+
+  // Получить все сохранённые фото из localStorage
+  getAll() {
+    try {
+      return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '{}');
+    } catch { return {}; }
+  },
+
+  // Получить фото для конкретного ID
+  get(id) {
+    return this.getAll()[id] || null;
+  },
+
+  // Сохранить фото (base64 data URL)
+  save(id, dataUrl) {
+    const photos = this.getAll();
+    photos[id] = dataUrl;
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(photos));
+  },
+
+  // Удалить фото
+  remove(id) {
+    const photos = this.getAll();
+    delete photos[id];
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(photos));
+  },
+
+  // Получить актуальный URL фото (localStorage или из массива CATALOG)
+  getPhotoUrl(item) {
+    const stored = this.get(item.id);
+    if (stored) return stored;
+    if (item.photo) return item.photo;
+    return null;
+  }
+};
+
+/* ── Рендер каталога ── */
 const WA = "https://wa.me/77077890369";
 const grid = document.getElementById('catalog-grid');
 
-CATALOG.forEach(item => {
-  const imgContent = item.photo
-    ? `<img src="${item.photo}" alt="${item.title}" loading="lazy">`
-    : `<span class="glyph">${item.glyph}</span>`;
+function renderCatalog() {
+  grid.innerHTML = '';
+  CATALOG.forEach(item => {
+    const photoUrl = PhotoManager.getPhotoUrl(item);
+    const imgContent = photoUrl
+      ? `<img src="${photoUrl}" alt="${item.title}" loading="lazy">`
+      : `<span class="glyph">${item.glyph}</span>`;
 
-  grid.innerHTML += `
-    <div class="catalog-card">
-      <div class="catalog-img" style="background:${item.color}">
-        ${imgContent}
-        <div class="catalog-badge">${item.badge}</div>
-      </div>
-      <div class="catalog-body">
-        <div class="catalog-title">${item.title}</div>
-        <div class="catalog-meta">${item.anime} · ${item.tech} · ${item.size}</div>
-        <div class="catalog-price">${item.price}</div>
-        <div class="catalog-order">
-          <a href="${WA}?text=Хочу%20заказать%3A%20${encodeURIComponent(item.title)}" target="_blank" class="btn btn-wa" style="font-size:0.75rem;padding:0.45rem 1rem;">
-            <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
-            Заказать
-          </a>
+    grid.innerHTML += `
+      <div class="catalog-card" id="card-${item.id}">
+        <div class="catalog-img" style="background:${item.color}">
+          ${imgContent}
+          <div class="catalog-badge">${item.badge}</div>
         </div>
-      </div>
-    </div>`;
+        <div class="catalog-body">
+          <div class="catalog-title">${item.title}</div>
+          <div class="catalog-meta">${item.anime} · ${item.tech} · ${item.size}</div>
+          <div class="catalog-price">${item.price}</div>
+          <div class="catalog-order">
+            <a href="${WA}?text=Хочу%20заказать%3A%20${encodeURIComponent(item.title)}" target="_blank" class="btn btn-wa" style="font-size:0.82rem;padding:0.5rem 1.2rem;border-radius:100px;">
+              <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
+              Заказать
+            </a>
+          </div>
+        </div>
+      </div>`;
+  });
+}
+
+renderCatalog();
+
+/* ── Photo Manager UI ── */
+const overlay = document.getElementById('photo-manager');
+const pmList = document.getElementById('pm-list');
+const fab = document.getElementById('admin-fab');
+const closeBtn = document.getElementById('pm-close');
+const fileInput = document.getElementById('photo-input');
+let currentEditId = null;
+
+fab.addEventListener('click', () => {
+  overlay.classList.add('active');
+  renderPhotoManager();
+});
+
+closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) overlay.classList.remove('active');
+});
+
+function renderPhotoManager() {
+  pmList.innerHTML = '';
+  CATALOG.forEach(item => {
+    const photoUrl = PhotoManager.getPhotoUrl(item);
+    const hasPhoto = !!photoUrl;
+    const thumbContent = hasPhoto
+      ? `<img src="${photoUrl}" alt="${item.title}">`
+      : item.glyph;
+    const statusText = hasPhoto ? '✓ Фото загружено' : 'Нет фото';
+    const btnText = hasPhoto ? '✕ Удалить' : '+ Загрузить';
+    const btnClass = hasPhoto ? 'pm-btn has-photo' : 'pm-btn';
+
+    pmList.innerHTML += `
+      <div class="pm-item">
+        <div class="pm-thumb">${thumbContent}</div>
+        <div class="pm-info">
+          <div class="pm-name">${item.title}</div>
+          <div class="pm-status">${statusText}</div>
+        </div>
+        <button class="${btnClass}" data-id="${item.id}" data-action="${hasPhoto ? 'remove' : 'upload'}">${btnText}</button>
+      </div>`;
+  });
+
+  // Bind buttons
+  pmList.querySelectorAll('.pm-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      if (action === 'upload') {
+        currentEditId = id;
+        fileInput.click();
+      } else {
+        PhotoManager.remove(id);
+        renderCatalog();
+        renderPhotoManager();
+      }
+    });
+  });
+}
+
+// Handle file selection
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file || !currentEditId) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    // Resize image to save localStorage space
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 800;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+      PhotoManager.save(currentEditId, dataUrl);
+      renderCatalog();
+      renderPhotoManager();
+      currentEditId = null;
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  fileInput.value = '';
+});
+
+/* ── Sakura petals animation ── */
+function createPetals() {
+  const container = document.getElementById('sakura');
+  const count = window.innerWidth < 600 ? 8 : 15;
+
+  for (let i = 0; i < count; i++) {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.style.left = Math.random() * 100 + '%';
+    petal.style.animationDuration = (8 + Math.random() * 12) + 's';
+    petal.style.animationDelay = Math.random() * 15 + 's';
+    petal.style.width = (8 + Math.random() * 10) + 'px';
+    petal.style.height = petal.style.width;
+    petal.style.opacity = 0;
+    container.appendChild(petal);
+  }
+}
+createPetals();
+
+/* ── Scroll reveal animation ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animation = 'fadeUp 0.6s ease-out forwards';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.catalog-card, .svc-card, .step').forEach(el => {
+  el.style.opacity = '0';
+  observer.observe(el);
 });
 </script>
 
