@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akiba Lab — 3D печать аниме</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c10;
+  --surface: #14141a;
+  --border: #2a2a36;
+  --pink: #f03e6e;
+  --pink-dim: rgba(240,62,110,0.12);
+  --cyan: #38d9f5;
+  --text: #ece8f4;
+  --muted: #7a748e;
+  --light: #b8b2cc;
+  --wa: #25D366;
+  --tg: #2AABEE;
+  --ig: #E1306C;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.6; overflow-x: hidden; }
+
+/* NAV */
+nav { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; height: 60px; background: rgba(12,12,16,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.logo { font-family: 'Noto Serif JP', serif; font-size: 1.2rem; font-weight: 900; color: var(--text); text-decoration: none; letter-spacing: 0.04em; }
+.logo em { font-style: normal; color: var(--pink); }
+.nav-links { display: flex; gap: 1.8rem; list-style: none; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+@media(max-width:600px){ .nav-links { display: none; } }
+
+/* HERO
+   ─────────────────────────────────────────────────────────────
+   Чтобы поставить фон — замени "" в --hero-bg на URL картинки.
+   Например: --hero-bg: url("photo.jpg");
+   Картинку можно закинуть рядом с index.html в репозиторий.
+   ───────────────────────────────────────────────────────────── */
+.hero-wrap {
+  --hero-bg: "";           /* ← сюда вставь URL фото */
+  position: relative;
+  background-image: var(--hero-bg);
+  background-size: cover;
+  background-position: center top;
+}
+.hero-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(12,12,16,0.6) 0%, rgba(12,12,16,0.85) 60%, var(--bg) 100%);
+  pointer-events: none;
+}
+.hero { padding: 7rem 2rem 5rem; max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+
+.tag { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); margin-bottom: 1.5rem; }
+.tag::before { content: ''; display: block; width: 20px; height: 1px; background: var(--pink); }
+h1 { font-family: 'Noto Serif JP', serif; font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+h1 span { color: var(--pink); }
+.hero-desc { max-width: 520px; color: var(--light); font-size: 1rem; margin-bottom: 2.5rem; line-height: 1.75; }
+.hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 0.7rem 1.5rem; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; text-decoration: none; border-radius: 6px; transition: all 0.18s; cursor: pointer; border: none; white-space: nowrap; }
+.btn-fill { background: var(--pink); color: #fff; }
+.btn-fill:hover { background: #d93360; transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--light); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--light); color: var(--text); }
+.btn-wa { background: var(--wa); color: #fff; }
+.btn-wa:hover { background: #1fb855; transform: translateY(-1px); }
+.btn-tg { background: var(--tg); color: #fff; }
+.btn-tg:hover { background: #1a96d4; transform: translateY(-1px); }
+.btn-ig { background: var(--ig); color: #fff; }
+.btn-ig:hover { background: #c1255a; transform: translateY(-1px); }
+
+/* social icons SVG inline */
+.icon-wa, .icon-tg, .icon-ig { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* SOCIAL FLOAT — плавающие кнопки справа */
+.social-float { position: fixed; right: 1.2rem; bottom: 1.5rem; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
+.social-float a { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.social-float a:hover { transform: scale(1.12); }
+.social-float .f-wa { background: var(--wa); }
+.social-float .f-tg { background: var(--tg); }
+.social-float .f-ig { background: var(--ig); }
+.social-float svg { width: 22px; height: 22px; }
+
+/* STATS */
+.stats { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); display: flex; justify-content: center; flex-wrap: wrap; }
+.stat { padding: 2rem 3rem; text-align: center; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-n { font-family: 'Noto Serif JP', serif; font-size: 2rem; font-weight: 900; color: var(--text); display: block; line-height: 1; }
+.stat-l { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 0.35rem; display: block; }
+
+/* SECTION */
+.section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+.section-head { margin-bottom: 3rem; }
+.section-head .tag { margin-bottom: 0.8rem; }
+h2 { font-family: 'Noto Serif JP', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 900; line-height: 1.15; }
+h2 em { font-style: normal; color: var(--pink); }
+
+/* CATALOG */
+.catalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1px; background: var(--border); }
+.catalog-card { background: var(--surface); overflow: hidden; transition: background 0.2s; }
+.catalog-card:hover { background: #1a1a24; }
+
+.catalog-img {
+  aspect-ratio: 4/3;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+}
+/* Если есть фото — оно перекрывает всё */
+.catalog-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Заглушка — иероглиф */
+.catalog-img .glyph { font-family: 'Noto Serif JP', serif; font-size: 4.5rem; font-weight: 900; color: rgba(240,62,110,0.1); position: relative; user-select: none; }
+.catalog-img .char-svg { position: absolute; opacity: 0.7; pointer-events: none; }
+
+.catalog-badge { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.55); border: 1px solid rgba(240,62,110,0.4); color: var(--pink); font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; z-index: 2; }
+.catalog-body { padding: 1rem 1.1rem 1.2rem; }
+.catalog-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.2rem; color: var(--text); }
+.catalog-meta { font-size: 0.75rem; color: var(--muted); }
+.catalog-price { font-size: 0.82rem; font-weight: 600; color: var(--pink); margin-top: 0.6rem; }
+.catalog-order { margin-top: 0.8rem; }
+
+/* SERVICES */
+.services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1px; background: var(--border); }
+.svc-card { background: var(--surface); padding: 2rem 1.5rem; }
+.svc-icon { font-size: 1.6rem; margin-bottom: 1rem; display: block; }
+.svc-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
+.svc-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.65; }
+
+/* PROCESS */
+.steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 2rem; }
+.step { display: flex; flex-direction: column; gap: 0.6rem; }
+.step-num { font-family: 'Noto Serif JP', serif; font-size: 2.2rem; font-weight: 900; color: var(--pink); line-height: 1; opacity: 0.35; }
+.step-title { font-weight: 600; font-size: 0.9rem; }
+.step-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.65; }
+
+/* CONTACT */
+.contact-socials { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 2rem; }
+.info-rows { display: flex; flex-direction: column; gap: 0.7rem; }
+.info-row { display: flex; gap: 0.8rem; font-size: 0.82rem; color: var(--muted); align-items: flex-start; }
+.info-row span:first-child { width: 20px; flex-shrink: 0; opacity: 0.7; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.78rem; color: var(--muted); }
+.footer-logo { font-family: 'Noto Serif JP', serif; font-weight: 900; font-size: 1rem; color: var(--text); text-decoration: none; }
+.footer-logo em { font-style: normal; color: var(--pink); }
+.footer-social { display: flex; gap: 0.8rem; }
+.footer-social a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+.footer-social a:hover { color: var(--text); }
+
+hr.divider { border: none; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<!-- Плавающие кнопки соцсетей -->
+<div class="social-float">
+  <a class="f-wa" href="https://wa.me/77772261916" target="_blank" title="WhatsApp">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
+  </a>
+  <a class="f-tg" href="https://t.me/OLEGTKR" target="_blank" title="Telegram">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+  </a>
+  <a class="f-ig" href="https://instagram.com/akiba.lab" target="_blank" title="Instagram">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+  </a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Akiba <em>Lab</em></a>
+  <ul class="nav-links">
+    <li><a href="#catalog">Каталог</a></li>
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#process">Процесс</a></li>
+    <li><a href="#contact">Контакты</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero-wrap">
+  <div class="hero">
+    <div class="tag">3D печать · Алматы</div>
+    <h1>Аниме фигурки<br><span>на заказ</span></h1>
+    <p class="hero-desc">Печатаем любимых персонажей с точностью до 0.05 мм. От маленького брелока до коллекционной скульптуры.</p>
+    <div class="hero-actions">
+      <a href="#catalog" class="btn btn-fill">Смотреть каталог</a>
+      <a href="https://wa.me/77772261916" target="_blank" class="btn btn-wa">
+        <svg class="icon-wa" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
+        WhatsApp
+      </a>
+      <a href="https://t.me/OLEGTKR" target="_blank" class="btn btn-tg">
+        <svg class="icon-tg" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Telegram
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><span class="stat-n">500+</span><span class="stat-l">фигурок напечатано</span></div>
+  <div class="stat"><span class="stat-n">0.05 мм</span><span class="stat-l">точность печати</span></div>
+  <div class="stat"><span class="stat-n">120+</span><span class="stat-l">серий аниме</span></div>
+  <div class="stat"><span class="stat-n">3–7 дн.</span><span class="stat-l">срок изготовления</span></div>
+</div>
+
+<!-- CATALOG -->
+<div class="section" id="catalog">
+  <div class="section-head">
+    <div class="tag">Каталог</div>
+    <h2>Наши <em>работы</em></h2>
+  </div>
+  <div class="catalog-grid" id="catalog-grid"></div>
+</div>
+
+<hr class="divider">
+
+<!-- SERVICES -->
+<div class="section" id="services">
+  <div class="section-head">
+    <div class="tag">Услуги</div>
+    <h2>Что мы <em>делаем</em></h2>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card"><span class="svc-icon">🗿</span><div class="svc-title">Печать по модели</div><p class="svc-desc">Присылаете STL/OBJ — мы печатаем. Проверка геометрии, поддержки и масштабирование включены.</p></div>
+    <div class="svc-card"><span class="svc-icon">✍️</span><div class="svc-title">3D-моделирование</div><p class="svc-desc">Переводим арты, референсы и скетчи в готовую 3D модель. Полный цикл от концепта до файла.</p></div>
+    <div class="svc-card"><span class="svc-icon">🎨</span><div class="svc-title">Покраска</div><p class="svc-desc">Ручная роспись, аэрограф, смывки, хайлайты. Точная цветопередача по вашим пожеланиям.</p></div>
+    <div class="svc-card"><span class="svc-icon">📦</span><div class="svc-title">Постобработка</div><p class="svc-desc">Шлифовка, грунтовка, сборка. Опционально — подставка с подсветкой и гравировкой.</p></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PROCESS -->
+<div class="section" id="process">
+  <div class="section-head">
+    <div class="tag">Как заказать</div>
+    <h2>Простой <em>процесс</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step"><span class="step-num">01</span><div class="step-title">Заявка</div><p class="step-desc">Напишите в WhatsApp или Telegram. Опишите персонажа, размер, бюджет.</p></div>
+    <div class="step"><span class="step-num">02</span><div class="step-title">Расчёт</div><p class="step-desc">В течение 24 часов пришлём точную стоимость и срок. Обсудим детали.</p></div>
+    <div class="step"><span class="step-num">03</span><div class="step-title">Предоплата</div><p class="step-desc">50% для старта. Принимаем Kaspi, карты, переводы.</p></div>
+    <div class="step"><span class="step-num">04</span><div class="step-title">Производство</div><p class="step-desc">Печать, покраска, обработка. Фото прогресса на каждом этапе.</p></div>
+    <div class="step"><span class="step-num">05</span><div class="step-title">Доставка</div><p class="step-desc">Самовывоз в Алматы или доставка по Казахстану.</p></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<div class="section" id="contact">
+  <div class="section-head">
+    <div class="tag">Контакты</div>
+    <h2>Написать <em>нам</em></h2>
+  </div>
+  <div class="contact-socials">
+    <a href="https://wa.me/77772261916" target="_blank" class="btn btn-wa">
+      <svg class="icon-wa" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
+      WhatsApp +7 777 226 1916
+    </a>
+    <a href="https://t.me/OLEGTKR" target="_blank" class="btn btn-tg">
+      <svg class="icon-tg" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.96 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      Telegram @OLEGTKR
+    </a>
+    <a href="https://instagram.com/akiba.lab" target="_blank" class="btn btn-ig">
+      <svg class="icon-ig" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Instagram @akiba.lab
+    </a>
+  </div>
+  <div class="info-rows">
+    <div class="info-row"><span>📍</span><span>Алматы, Казахстан</span></div>
+    <div class="info-row"><span>🕐</span><span>Пн–Сб, 10:00–20:00 (GMT+5)</span></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Akiba <em>Lab</em></a>
+  <span>© 2024 · 3D печать аниме · Алматы</span>
+  <div class="footer-social">
+    <a href="https://wa.me/77772261916" target="_blank">WA</a>
+    <a href="https://t.me/OLEGTKR" target="_blank">TG</a>
+    <a href="https://instagram.com/akiba.lab" target="_blank">IG</a>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   КАТАЛОГ — редактируй этот массив чтобы добавить/убрать работы
+   
+   Поля каждой карточки:
+     title   — название фигурки
+     anime   — название аниме (показывается в meta)
+     tech    — материал и технология печати
+     size    — размер
+     price   — цена (строка)
+     badge   — тег жанра (Shonen / Mecha / Moe / Custom и т.д.)
+     photo   — путь к фото или "" если фото нет
+               Пример: "photos/naruto.jpg"
+               Фото кладёшь в папку photos/ рядом с index.html
+     glyph   — иероглиф-заглушка если фото нет
+     color   — цвет фона карточки если нет фото (hex)
+   ===================================================================== */
+const CATALOG = [
+  {
+    title:  "Наруто Узумаки",
+    anime:  "Naruto",
+    tech:   "Resin SLA",
+    size:   "15 см",
+    price:  "от 12 000 ₸",
+    badge:  "Shonen",
+    photo:  "",          /* ← сюда: "photos/naruto.jpg" */
+    glyph:  "忍",
+    color:  "#131318"
+  },
+  {
+    title:  "Evangelion Unit-01",
+    anime:  "NGE",
+    tech:   "Resin SLA",
+    size:   "22 см",
+    price:  "от 18 000 ₸",
+    badge:  "Mecha",
+    photo:  "",
+    glyph:  "機",
+    color:  "#0e1218"
+  },
+  {
+    title:  "Кирито",
+    anime:  "SAO",
+    tech:   "FDM PLA+",
+    size:   "18 см",
+    price:  "от 8 000 ₸",
+    badge:  "Isekai",
+    photo:  "",
+    glyph:  "剣",
+    color:  "#12100e"
+  },
+  {
+    title:  "Шото Тодороки",
+    anime:  "My Hero Academia",
+    tech:   "Resin SLA",
+    size:   "16 см",
+    price:  "от 13 000 ₸",
+    badge:  "Superhero",
+    photo:  "",
+    glyph:  "炎",
+    color:  "#100a14"
+  },
+  {
+    title:  "Зеро Ту",
+    anime:  "Darling in the FranXX",
+    tech:   "Resin SLA",
+    size:   "22 см",
+    price:  "от 16 000 ₸",
+    badge:  "Moe",
+    photo:  "",
+    glyph:  "02",
+    color:  "#090c0f"
+  },
+  {
+    title:  "Ваш персонаж",
+    anime:  "Любое аниме",
+    tech:   "по запросу",
+    size:   "любой",
+    price:  "по запросу",
+    badge:  "Custom",
+    photo:  "",
+    glyph:  "夢",
+    color:  "#0c100c"
+  }
+];
+
+/* ── рендер каталога (не трогай) ── */
+const WA = "https://wa.me/77772261916";
+const grid = document.getElementById('catalog-grid');
+
+CATALOG.forEach(item => {
+  const imgContent = item.photo
+    ? `<img src="${item.photo}" alt="${item.title}" loading="lazy">`
+    : `<span class="glyph">${item.glyph}</span>`;
+
+  grid.innerHTML += `
+    <div class="catalog-card">
+      <div class="catalog-img" style="background:${item.color}">
+        ${imgContent}
+        <div class="catalog-badge">${item.badge}</div>
+      </div>
+      <div class="catalog-body">
+        <div class="catalog-title">${item.title}</div>
+        <div class="catalog-meta">${item.anime} · ${item.tech} · ${item.size}</div>
+        <div class="catalog-price">${item.price}</div>
+        <div class="catalog-order">
+          <a href="${WA}?text=Хочу%20заказать%3A%20${encodeURIComponent(item.title)}" target="_blank" class="btn btn-wa" style="font-size:0.75rem;padding:0.45rem 1rem;">
+            <svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.566 4.14 1.546 5.877L.057 23.882a.5.5 0 00.61.61l6.005-1.489A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.745 9.745 0 012.25 12 9.745 9.745 0 0112 2.25 9.745 9.745 0 0121.75 12 9.745 9.745 0 0112 21.75z" fill-rule="evenodd"/></svg>
+            Заказать
+          </a>
+        </div>
+      </div>
+    </div>`;
+});
+</script>
+
+</body>
+</html>
