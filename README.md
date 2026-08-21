@@ -1,1 +1,2 @@
-what do you whant go f@cking away
+Akiba-lab is more than just a workshop; it is a community driven by a deep love for geek and anime culture. Based in Kazakhstan, we are dedicated to supporting and expanding this culture by bridging the gap between fiction and reality.
+Heavily inspired by ci-fi anime our mission is to blend these visionary aesthetics with 3D modeling and hardware engineering. We take the crazy, futuristic concepts we see on screen and bring them into the real world.
